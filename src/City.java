@@ -2,10 +2,10 @@ import java.util.Objects;
 
 public class City {
 
-  private int id;
-  private String nom;
-  private Double longitude;
-  private Double latitude;
+  private final int id;
+  private final String nom;
+  private final Double longitude;
+  private final Double latitude;
 
   public City(int id, String nom, Double longitude, Double latitude) {
     this.id = id;
