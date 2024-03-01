@@ -1,5 +1,7 @@
 public class Graph {
 
+  private Ha
+
   public void calculerItineraireMinimisantNombreRoutes(String city1, String city2) {
   }
 
