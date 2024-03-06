@@ -4,22 +4,23 @@ import java.util.*;
 
 public class Graph {
 
+  private Map<Integer , City> listOfCities;
   private Map<City, List<Road>> outputRoads;
 
   public Graph(File cities, File roads) {
     outputRoads = new HashMap<>();
+    listOfCities = new HashMap<>();
     Scanner scanCities = null;
     try {
       scanCities = new Scanner(cities);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-    List<City> citiesList = new ArrayList<>();
     while (scanCities.hasNextLine()) {
       String line = scanCities.nextLine();
       String[] values = line.split(",");
       City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[2]), Double.parseDouble(values[3]));
-      citiesList.add(city);
+      listOfCities.put(city.getId(), city);
       outputRoads.put(city, new ArrayList<>());
     }
     scanCities.close();
@@ -41,8 +42,11 @@ public class Graph {
     scanRoads.close();
   }
   public void calculerItineraireMinimisantNombreRoutes(String city1, String city2) {
+
   }
 
+
   public void calculerItineraireMinimisantKm(String city1, String city2) {
+
   }
 }
