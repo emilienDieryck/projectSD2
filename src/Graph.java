@@ -61,7 +61,7 @@ public class Graph {
       City currentCity = queue.poll();
 
       if (currentCity.equals(endCity)) {
-        break; // Nous avons trouvé l'itinéraire, donc nous sortons de la boucle
+        break;
       }
 
       for (Road road : outputRoads.get(currentCity)) {
@@ -81,7 +81,7 @@ public class Graph {
       throw new RuntimeException("Itinéraire non trouvé entre " + city1Name + " et " + city2Name);
     }
 
-    // Reconstruire l'itinéraire à partir du parentMap
+
     List<City> itinerary = new ArrayList<>();
     City currentCity = endCity;
     while (currentCity != null) {
@@ -90,17 +90,18 @@ public class Graph {
     }
     Collections.reverse(itinerary);
 
-    // Afficher l'itinéraire dans le format spécifié
     double totalDistance = 0.0;
-    System.out.println("Trajet de " + city1Name + " à " + city2Name + ":");
+    String routesFinal = "";
     for (int i = 0; i < itinerary.size() - 1; i++) {
       City city = itinerary.get(i);
       City nextCity = itinerary.get(i + 1);
       double distance = Util.distance(city.getLatitude(), city.getLongitude(), nextCity.getLatitude(), nextCity.getLongitude());
       totalDistance += distance;
-      System.out.println(city.getNom() + " -> " + nextCity.getNom() + " (" + String.format("%.2f", distance) + " km)");
+      routesFinal += city.getNom() + " -> " + nextCity.getNom() + " (" + String.format("%.2f", distance) + " km) \n" ;
     }
-    System.out.println("Total: " + (itinerary.size()-1) + " routes et " + totalDistance + " kms");
+    System.out.print("Trajet de " + city1Name + " à " + city2Name + ": ");
+    System.out.println( (itinerary.size()-1) + " routes et " + totalDistance + " kms");
+    System.out.println(routesFinal);
   }
 
   public void calculerItineraireMinimisantKm(String city1Name, String city2Name) {
@@ -112,7 +113,6 @@ public class Graph {
       return;
     }
 
-    // Structure de données pour le calcul de l'itinéraire le plus court
     Map<City, Double> distances = new HashMap<>();
     Map<City, City> predecessors = new HashMap<>();
     PriorityQueue<City> queue = new PriorityQueue<>(Comparator.comparingDouble(distances::get));
@@ -128,7 +128,7 @@ public class Graph {
     while (!queue.isEmpty()) {
       City current = queue.poll();
       if (current.equals(city2)) {
-        break; // Arrêt lorsque la destination est atteinte
+        break;
       }
       for (Road road : outputRoads.get(current)) {
         City neighbor = listOfCities.get(road.getOtherEnd(current.getId()));
@@ -141,7 +141,6 @@ public class Graph {
       }
     }
 
-    // Construction du chemin
     LinkedList<City> path = new LinkedList<>();
     City current = city2;
     while (current != null) {
@@ -151,6 +150,7 @@ public class Graph {
 
 
     double distanceTotal = 0;
+    String sortie = "";
     for (int i = 0; i < path.size() - 1; i++) {
       City from = path.get(i);
       City to = path.get(i + 1);
@@ -158,11 +158,12 @@ public class Graph {
       double dist = Util.distance(from.getLatitude(), from.getLongitude(), to.getLatitude(), to.getLongitude());
       distanceTotal += dist;
 
-      System.out.println(from.getNom() + " -> " + to.getNom() + " (" + String.format("%.2f", dist) + " km)");
+      sortie += from.getNom() + " -> " + to.getNom() + " (" + String.format("%.2f", dist) + " km) \n";
     }
-    System.out.println();
-    System.out.println("Trajet de " + city1Name + " à " + city2Name + ": " + (path.size() - 1) + " routes et " + distanceTotal + " kms");
 
+    System.out.println("Trajet de " + city1Name + " à " + city2Name + ": " + (path.size() - 1) + " routes et " + distanceTotal + " kms");
+    System.out.println();
+    System.out.println(sortie);
   }
 
   private City findCityByName (String cityName) {
