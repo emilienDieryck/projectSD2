@@ -21,7 +21,7 @@ public class Graph {
       String[] values = line.split(",");
       City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[2]), Double.parseDouble(values[3]));
       listOfCities.put(city.getId(), city);
-      outputRoads.put(city, new ArrayList<>());
+      outputRoads.put(city, new HashSet<>());
     }
     scanCities.close();
     Scanner scanRoads = null;
