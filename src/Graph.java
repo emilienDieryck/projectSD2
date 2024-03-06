@@ -41,8 +41,61 @@ public class Graph {
     }
     scanRoads.close();
   }
-  public void calculerItineraireMinimisantNombreRoutes(String city1, String city2) {
+  public void calculerItineraireMinimisantNombreRoutes(String city1Name, String city2Name) {
+    City startCity = findCityByName(city1Name);
+    City endCity = findCityByName(city2Name);
+
+    if (startCity == null || endCity == null) {
+      throw new IllegalArgumentException("Ville non trouvée");
+    }
+
+    Queue<City> queue = new LinkedList<>();
+    Map<City, City> parentMap = new HashMap<>();
+    Set<City> visited = new HashSet<>();
+
+    queue.offer(startCity);
+    visited.add(startCity);
+
+    while (!queue.isEmpty()) {
+      City currentCity = queue.poll();
+
+      if (currentCity.equals(endCity)) {
+        break; // Nous avons trouvé l'itinéraire, donc nous sortons de la boucle
+      }
+
+      for (Road road : outputRoads.get(currentCity)) {
+        City neighborCity = road.getExtremite1() == currentCity.getId() ?
+            listOfCities.get(road.getExtremite2()) :
+            listOfCities.get(road.getExtremite1());
+
+        if (!visited.contains(neighborCity)) {
+          queue.offer(neighborCity);
+          visited.add(neighborCity);
+          parentMap.put(neighborCity, currentCity);
+        }
+      }
+    }
+
+    if (!visited.contains(endCity)) {
+      throw new RuntimeException("Itinéraire non trouvé entre " + city1Name + " et " + city2Name);
+    }
+
+    // Reconstruire l'itinéraire à partir du parentMap
+    List<City> itinerary = new ArrayList<>();
+    City currentCity = endCity;
+    while (currentCity != null) {
+      itinerary.add(currentCity);
+      currentCity = parentMap.get(currentCity);
+    }
+    Collections.reverse(itinerary);
+
+    // Afficher l'itinéraire
+    System.out.println("Itinéraire minimisant le nombre de routes entre " + city1Name + " et " + city2Name + ":");
+    for (City city : itinerary) {
+      System.out.println(city.getNom());
+    }
   }
+
 
 
   public void calculerItineraireMinimisantKm(String city1, String city2) {
