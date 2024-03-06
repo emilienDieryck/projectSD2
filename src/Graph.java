@@ -5,7 +5,7 @@ import java.util.*;
 public class Graph {
 
   private Map<Integer , City> listOfCities;
-  private Map<City, List<Road>> outputRoads;
+  private Map<City, Set<Road>> outputRoads;
 
   public Graph(File cities, File roads) {
     outputRoads = new HashMap<>();
