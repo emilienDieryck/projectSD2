@@ -33,8 +33,8 @@ public class Graph {
     while (scanRoads.hasNextLine()) {
       String line = scanRoads.nextLine();
       String[] values = line.split(",");
-      City city1 = citiesList.get(Integer.parseInt(values[0]));
-      City city2 = citiesList.get(Integer.parseInt(values[1]));
+      City city1 = listOfCities.get(Integer.parseInt(values[0]));
+      City city2 = listOfCities.get(Integer.parseInt(values[1]));
       Road road = new Road(city1.getId(), city2.getId());
       outputRoads.get(city1).add(road);
       outputRoads.get(city2).add(road);
