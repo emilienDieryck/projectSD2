@@ -22,6 +22,7 @@ public class Graph {
       City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[2]), Double.parseDouble(values[3]));
       listOfCities.put(city.getId(), city);
       outputRoads.put(city, new HashSet<>());
+      System.out.println(city.getNom() + " " + city.getLatitude() + " " + city.getLongitude());
     }
     scanCities.close();
     Scanner scanRoads = null;
@@ -40,6 +41,7 @@ public class Graph {
       outputRoads.get(city2).add(road);
     }
     scanRoads.close();
+
   }
   public void calculerItineraireMinimisantNombreRoutes(String city1Name, String city2Name) {
     City startCity = findCityByName(city1Name);
@@ -95,26 +97,12 @@ public class Graph {
     for (int i = 0; i < itinerary.size() - 1; i++) {
       City city = itinerary.get(i);
       City nextCity = itinerary.get(i + 1);
-      Road road = findRoad(city, nextCity);
       double distance = Util.distance(city.getLatitude(), city.getLongitude(), nextCity.getLatitude(), nextCity.getLongitude());
       totalDistance += distance;
-      System.out.println(city.getNom() + " -> " + nextCity.getNom() + " (" + String.format("%.2f", distance) + " km)");
+      System.out.println(city.getNom() + " -> " + nextCity.getNom() + " (" + distance + " km)");
     }
-    System.out.println("Total: " + (itinerary.size()-1) + " routes et " + String.format("%.12f", totalDistance) + " kms");
+    System.out.println("Total: " + (itinerary.size()-1) + " routes et " + totalDistance + " kms");
   }
-
-  private Road findRoad(City city1, City city2) {
-    for (Road road : outputRoads.get(city1)) {
-      int neighborCityId = road.getExtremite1() == city1.getId() ? road.getExtremite2() : road.getExtremite1();
-      if (neighborCityId == city2.getId()) {
-        return road;
-      }
-    }
-    return null;
-  }
-
-
-
 
   public void calculerItineraireMinimisantKm(String city1, String city2) {
 
