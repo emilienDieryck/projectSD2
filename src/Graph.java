@@ -98,7 +98,7 @@ public class Graph {
       City nextCity = itinerary.get(i + 1);
       double distance = Util.distance(city.getLatitude(), city.getLongitude(), nextCity.getLatitude(), nextCity.getLongitude());
       totalDistance += distance;
-      System.out.println(city.getNom() + " -> " + nextCity.getNom() + " (" + distance + " km)");
+      System.out.println(city.getNom() + " -> " + nextCity.getNom() + " (" + String.format("%.2f", distance) + " km)");
     }
     System.out.println("Total: " + (itinerary.size()-1) + " routes et " + totalDistance + " kms");
   }
