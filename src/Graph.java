@@ -42,11 +42,19 @@ public class Graph {
     scanRoads.close();
   }
   public void calculerItineraireMinimisantNombreRoutes(String city1, String city2) {
-
   }
 
 
   public void calculerItineraireMinimisantKm(String city1, String city2) {
 
+  }
+
+  private City findCityByName (String cityName) {
+    for (City city : listOfCities.values()) {
+      if (city.getNom().equals(cityName)) {
+        return city;
+      }
+    }
+    return null;
   }
 }
