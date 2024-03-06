@@ -19,7 +19,7 @@ public class Graph {
     while (scanCities.hasNextLine()) {
       String line = scanCities.nextLine();
       String[] values = line.split(",");
-      City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[2]), Double.parseDouble(values[3]));
+      City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[3]), Double.parseDouble(values[2]));
       listOfCities.put(city.getId(), city);
       outputRoads.put(city, new HashSet<>());
     }
@@ -155,7 +155,7 @@ public class Graph {
       City from = path.get(i);
       City to = path.get(i + 1);
 
-      double dist = Util.distance(from.getLongitude(), from.getLatitude(), to.getLongitude(), to.getLatitude());
+      double dist = Util.distance(from.getLatitude(), from.getLongitude(), to.getLatitude(), to.getLongitude());
       distanceTotal += dist;
 
       System.out.println(from.getNom() + " -> " + to.getNom() + " (" + String.format("%.2f", dist) + " km)");
