@@ -22,7 +22,6 @@ public class Graph {
       City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[2]), Double.parseDouble(values[3]));
       listOfCities.put(city.getId(), city);
       outputRoads.put(city, new HashSet<>());
-      System.out.println(city.getNom() + " " + city.getLatitude() + " " + city.getLongitude());
     }
     scanCities.close();
     Scanner scanRoads = null;
@@ -104,7 +103,65 @@ public class Graph {
     System.out.println("Total: " + (itinerary.size()-1) + " routes et " + totalDistance + " kms");
   }
 
-  public void calculerItineraireMinimisantKm(String city1, String city2) {
+  public void calculerItineraireMinimisantKm(String city1Name, String city2Name) {
+    City city1 = findCityByName(city1Name);
+    City city2 = findCityByName(city2Name);
+
+    if (city1 == null || city2 == null) {
+      System.out.println("Villes non trouvées.");
+      return;
+    }
+
+    // Structure de données pour le calcul de l'itinéraire le plus court
+    Map<City, Double> distances = new HashMap<>();
+    Map<City, City> predecessors = new HashMap<>();
+    PriorityQueue<City> queue = new PriorityQueue<>(Comparator.comparingDouble(distances::get));
+
+    for (City city : listOfCities.values()) {
+      distances.put(city, Double.MAX_VALUE);
+      predecessors.put(city, null);
+    }
+
+    distances.put(city1, 0.0);
+    queue.add(city1);
+
+    while (!queue.isEmpty()) {
+      City current = queue.poll();
+      if (current.equals(city2)) {
+        break; // Arrêt lorsque la destination est atteinte
+      }
+      for (Road road : outputRoads.get(current)) {
+        City neighbor = listOfCities.get(road.getOtherEnd(current.getId()));
+        double distanceThroughU = distances.get(current) + Util.distance(current.getLatitude(), current.getLongitude(), neighbor.getLatitude(), neighbor.getLongitude());
+        if (distanceThroughU < distances.get(neighbor)) {
+          distances.put(neighbor, distanceThroughU);
+          predecessors.put(neighbor, current);
+          queue.add(neighbor);
+        }
+      }
+    }
+
+    // Construction du chemin
+    LinkedList<City> path = new LinkedList<>();
+    City current = city2;
+    while (current != null) {
+      path.addFirst(current);
+      current = predecessors.get(current);
+    }
+
+
+    double distanceTotal = 0;
+    for (int i = 0; i < path.size() - 1; i++) {
+      City from = path.get(i);
+      City to = path.get(i + 1);
+
+      double dist = Util.distance(from.getLongitude(), from.getLatitude(), to.getLongitude(), to.getLatitude());
+      distanceTotal += dist;
+
+      System.out.println(from.getNom() + " -> " + to.getNom() + " (" + String.format("%.2f", dist) + " km)");
+    }
+    System.out.println();
+    System.out.println("Trajet de " + city1Name + " à " + city2Name + ": " + (path.size() - 1) + " routes et " + distanceTotal + " kms");
 
   }
 

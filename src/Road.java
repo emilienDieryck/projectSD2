@@ -17,6 +17,16 @@ public class Road {
     return extremite2;
   }
 
+  public int getOtherEnd(int extremity) {
+    if (extremity == extremite1) {
+      return extremite2;
+    } else if (extremity == extremite2) {
+      return extremite1;
+    } else {
+      throw new IllegalArgumentException("Given extremity is not part of this road.");
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
