@@ -89,12 +89,30 @@ public class Graph {
     }
     Collections.reverse(itinerary);
 
-    // Afficher l'itinéraire
-    System.out.println("Itinéraire minimisant le nombre de routes entre " + city1Name + " et " + city2Name + ":");
-    for (City city : itinerary) {
-      System.out.println(city.getNom());
+    // Afficher l'itinéraire dans le format spécifié
+    double totalDistance = 0.0;
+    System.out.println("Trajet de " + city1Name + " à " + city2Name + ":");
+    for (int i = 0; i < itinerary.size() - 1; i++) {
+      City city = itinerary.get(i);
+      City nextCity = itinerary.get(i + 1);
+      Road road = findRoad(city, nextCity);
+      double distance = Util.distance(city.getLatitude(), city.getLongitude(), nextCity.getLatitude(), nextCity.getLongitude());
+      totalDistance += distance;
+      System.out.println(city.getNom() + " -> " + nextCity.getNom() + " (" + String.format("%.2f", distance) + " km)");
     }
+    System.out.println("Total: " + (itinerary.size()-1) + " routes et " + String.format("%.12f", totalDistance) + " kms");
   }
+
+  private Road findRoad(City city1, City city2) {
+    for (Road road : outputRoads.get(city1)) {
+      int neighborCityId = road.getExtremite1() == city1.getId() ? road.getExtremite2() : road.getExtremite1();
+      if (neighborCityId == city2.getId()) {
+        return road;
+      }
+    }
+    return null;
+  }
+
 
 
 
