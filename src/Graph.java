@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Graph {
@@ -7,7 +8,12 @@ public class Graph {
 
   public Graph(File cities, File roads) {
     outputRoads = new HashMap<>();
-    Scanner scanCities = new Scanner(cities);
+    Scanner scanCities = null;
+    try {
+      scanCities = new Scanner(cities);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
     List<City> citiesList = new ArrayList<>();
     while (scanCities.hasNextLine()) {
       String line = scanCities.nextLine();
@@ -17,7 +23,12 @@ public class Graph {
       outputRoads.put(city, new ArrayList<>());
     }
     scanCities.close();
-    Scanner scanRoads = new Scanner(roads);
+    Scanner scanRoads = null;
+    try {
+      scanRoads = new Scanner(roads);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
     while (scanRoads.hasNextLine()) {
       String line = scanRoads.nextLine();
       String[] values = line.split(",");
