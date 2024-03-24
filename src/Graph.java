@@ -6,10 +6,13 @@ public class Graph {
 
   private Map<Integer , City> listOfCities;
   private Map<City, Set<Road>> outputRoads;
+  private Map<String, City> cityByName;
 
   public Graph(File cities, File roads) {
     outputRoads = new HashMap<>();
     listOfCities = new HashMap<>();
+    cityByName = new HashMap<>();
+
     Scanner scanCities = null;
     try {
       scanCities = new Scanner(cities);
@@ -22,6 +25,7 @@ public class Graph {
       City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[3]), Double.parseDouble(values[2]));
       listOfCities.put(city.getId(), city);
       outputRoads.put(city, new HashSet<>());
+      cityByName.put(city.getNom(), city);
     }
     scanCities.close();
     Scanner scanRoads = null;
@@ -166,12 +170,7 @@ public class Graph {
     System.out.println(sortie);
   }
 
-  private City findCityByName (String cityName) {
-    for (City city : listOfCities.values()) {
-      if (city.getNom().equals(cityName)) {
-        return city;
-      }
-    }
-    return null;
+  private City findCityByName(String cityName) {
+    return cityByName.get(cityName);
   }
 }
