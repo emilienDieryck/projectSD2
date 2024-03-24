@@ -56,24 +56,6 @@ public class Graph {
     }
   }
 
-  /**
-  public Set<Road> readRoad(File file) {
-    Set<Road> listRoad = new HashSet<>();
-    try (Scanner scanner = new Scanner(file)) {
-      while (scanner.hasNextLine()) {
-        String line = scanner.nextLine();
-        String[] values = line.split(",");
-        int city1Id = Integer.parseInt(values[0]);
-        int city2Id = Integer.parseInt(values[1]);
-        Road road = new Road(city1Id, city2Id);
-        listRoad.add(road);
-      }
-      return listRoad;
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-  }
-  **/
 
   public void calculerItineraireMinimisantNombreRoutes(String city1Name, String city2Name) {
     City startCity = findCityByName(city1Name);
