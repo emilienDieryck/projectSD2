@@ -5,7 +5,7 @@ import java.util.*;
 public class Graph {
 
   private Map<Integer , City> listOfCities;
-  private Map<City, Set<Road>> outputRoads;
+  private Map<Integer, Set<Road>> outputRoads;
   private Map<String, City> cityByName;
 
   public Graph(File cities, File roads) {
@@ -24,7 +24,7 @@ public class Graph {
       String[] values = line.split(",");
       City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[3]), Double.parseDouble(values[2]));
       listOfCities.put(city.getId(), city);
-      outputRoads.put(city, new HashSet<>());
+      outputRoads.put(city.getId(), new HashSet<>());
       cityByName.put(city.getNom(), city);
     }
     scanCities.close();
@@ -37,11 +37,11 @@ public class Graph {
     while (scanRoads.hasNextLine()) {
       String line = scanRoads.nextLine();
       String[] values = line.split(",");
-      City city1 = listOfCities.get(Integer.parseInt(values[0]));
-      City city2 = listOfCities.get(Integer.parseInt(values[1]));
-      Road road = new Road(city1.getId(), city2.getId());
-      outputRoads.get(city1).add(road);
-      outputRoads.get(city2).add(road);
+      int city1Id = Integer.parseInt(values[0]);
+      int city2Id = Integer.parseInt(values[1]);
+      Road road = new Road(city1Id, city2Id);
+      outputRoads.get(city1Id).add(road);
+      outputRoads.get(city2Id).add(road);
     }
     scanRoads.close();
 
@@ -68,7 +68,7 @@ public class Graph {
         break;
       }
 
-      for (Road road : outputRoads.get(currentCity)) {
+      for (Road road : outputRoads.get(currentCity.getId())) {
         City neighborCity = road.getExtremite1() == currentCity.getId() ?
             listOfCities.get(road.getExtremite2()) :
             listOfCities.get(road.getExtremite1());
@@ -134,7 +134,7 @@ public class Graph {
       if (current.equals(city2)) {
         break;
       }
-      for (Road road : outputRoads.get(current)) {
+      for (Road road : outputRoads.get(current.getId())) {
         City neighbor = listOfCities.get(road.getOtherEnd(current.getId()));
         double distanceThroughU = distances.get(current) + Util.distance(current.getLatitude(), current.getLongitude(), neighbor.getLatitude(), neighbor.getLongitude());
         if (distanceThroughU < distances.get(neighbor)) {
