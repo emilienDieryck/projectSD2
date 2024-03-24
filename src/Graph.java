@@ -1,3 +1,4 @@
+import javax.sound.sampled.Line;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -13,39 +14,67 @@ public class Graph {
     listOfCities = new HashMap<>();
     cityByName = new HashMap<>();
 
-    Scanner scanCities = null;
-    try {
-      scanCities = new Scanner(cities);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
+    for (City city : readCity(cities)) {
+      this.listOfCities.put(city.getId(), city);
+      this.outputRoads.put(city.getId(), new HashSet<>());
+      this.cityByName.put(city.getNom(), city);
     }
-    while (scanCities.hasNextLine()) {
-      String line = scanCities.nextLine();
-      String[] values = line.split(",");
-      City city = new City(Integer.parseInt(values[0]), values[1], Double.parseDouble(values[3]), Double.parseDouble(values[2]));
-      listOfCities.put(city.getId(), city);
-      outputRoads.put(city.getId(), new HashSet<>());
-      cityByName.put(city.getNom(), city);
-    }
-    scanCities.close();
-    Scanner scanRoads = null;
-    try {
-      scanRoads = new Scanner(roads);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    while (scanRoads.hasNextLine()) {
-      String line = scanRoads.nextLine();
-      String[] values = line.split(",");
-      int city1Id = Integer.parseInt(values[0]);
-      int city2Id = Integer.parseInt(values[1]);
-      Road road = new Road(city1Id, city2Id);
-      outputRoads.get(city1Id).add(road);
-      outputRoads.get(city2Id).add(road);
-    }
-    scanRoads.close();
 
+    try {
+      Scanner scanRoads = new Scanner(roads);
+      while (scanRoads.hasNextLine()) {
+        String line = scanRoads.nextLine();
+        String[] values = line.split(",");
+        int city1Id = Integer.parseInt(values[0]);
+        int city2Id = Integer.parseInt(values[1]);
+        Road road = new Road(city1Id, city2Id);
+        outputRoads.get(city1Id).add(road);
+        outputRoads.get(city2Id).add(road);
+      }
+      scanRoads.close();
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
+
+  public List<City> readCity(File file) {
+    List<City> listCity = new ArrayList<>();
+    try (Scanner scanner = new Scanner(file)) {
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
+        String[] values = line.split(",");
+        int cityId = Integer.parseInt(values[0]);
+        String cityName =  values[1];
+        double latitude = Double.parseDouble(values[3]);
+        double longitude = Double.parseDouble(values[2]);
+        City cityAdd = new City(cityId, cityName, latitude, longitude);
+        listCity.add(cityAdd);
+      }
+      return listCity;
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+  public Set<Road> readRoad(File file) {
+    Set<Road> listRoad = new HashSet<>();
+    try (Scanner scanner = new Scanner(file)) {
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
+        String[] values = line.split(",");
+        int city1Id = Integer.parseInt(values[0]);
+        int city2Id = Integer.parseInt(values[1]);
+        Road road = new Road(city1Id, city2Id);
+        listRoad.add(road);
+      }
+      return listRoad;
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  **/
+
   public void calculerItineraireMinimisantNombreRoutes(String city1Name, String city2Name) {
     City startCity = findCityByName(city1Name);
     City endCity = findCityByName(city2Name);
